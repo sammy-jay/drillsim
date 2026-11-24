@@ -1,26 +1,331 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------ */
+/*  Design tokens                                                      */
+/*  Light is the base; dark is selected (its own steps, not a flip).   */
+/* ------------------------------------------------------------------ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --canvas: #f4f4f1;
+  --canvas-grid: rgba(11, 11, 11, 0.045);
+  --panel: #fcfcfb;
+  --panel-2: #f3f3f0;
+  --panel-3: #e9e8e4;
+  --line: #e3e2dd;
+  --line-strong: #cbc9c2;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --ink-3: #807f79;
+  --accent: #d9480f;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(217, 72, 15, 0.09);
+  --accent-line: rgba(217, 72, 15, 0.35);
+  --focus: rgba(217, 72, 15, 0.45);
+
+  /* chart chrome */
+  --chart-grid: #ecebe7;
+  --chart-axis: #b4b2ab;
+  --chart-crosshair: #8a8983;
+  --chart-band: rgba(42, 120, 214, 0.08);
+
+  /* categorical series - validated reference palette (light steps) */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --series-7: #6250d6;
+  --series-8: #e34948;
+
+  /* status - reserved, never used as a series */
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --warning: #fab219;
+  --warning-ink: #8a5a00;
+  --serious: #ec835a;
+  --serious-ink: #a5401a;
+  --critical: #d03b3b;
+  --critical-ink: #b02727;
+
+  /* lithology fills for formation columns */
+  --lith-clay: #c9b99a;
+  --lith-shale: #8f9aa3;
+  --lith-sand: #e6cf86;
+  --lith-lime: #9fc3d6;
+  --lith-dolo: #b6a6cf;
+  --lith-salt: #e4e7ea;
+  --lith-gas: #f0b37e;
+
+  --shadow-panel: 0 1px 0 rgba(11, 11, 11, 0.03), 0 1px 2px rgba(11, 11, 11, 0.04);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0b0c0e;
+  --canvas-grid: rgba(255, 255, 255, 0.028);
+  --panel: #141518;
+  --panel-2: #1a1c20;
+  --panel-3: #23262b;
+  --line: #24262b;
+  --line-strong: #353840;
+  --ink: #f0efec;
+  --ink-2: #c3c2b7;
+  --ink-3: #8b8a83;
+  --accent: #ff7a33;
+  --accent-ink: #160a03;
+  --accent-soft: rgba(255, 122, 51, 0.11);
+  --accent-line: rgba(255, 122, 51, 0.38);
+  --focus: rgba(255, 122, 51, 0.5);
+
+  --chart-grid: #222429;
+  --chart-axis: #4a4d55;
+  --chart-crosshair: #8b8a83;
+  --chart-band: rgba(57, 135, 229, 0.12);
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #0ca30c;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+
+  --good: #0ca30c;
+  --good-ink: #3fcf3f;
+  --warning: #fab219;
+  --warning-ink: #fab219;
+  --serious: #ec835a;
+  --serious-ink: #ec835a;
+  --critical: #d03b3b;
+  --critical-ink: #f07272;
+
+  --lith-clay: #6b5f48;
+  --lith-shale: #4c545c;
+  --lith-sand: #8a7942;
+  --lith-lime: #4a6f82;
+  --lith-dolo: #62557a;
+  --lith-salt: #6d7277;
+  --lith-gas: #9a5f2e;
+
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-panel-3: var(--panel-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-good: var(--good);
+  --color-good-ink: var(--good-ink);
+  --color-warning: var(--warning);
+  --color-warning-ink: var(--warning-ink);
+  --color-serious: var(--serious);
+  --color-serious-ink: var(--serious-ink);
+  --color-critical: var(--critical);
+  --color-critical-ink: var(--critical-ink);
+  --color-series-1: var(--series-1);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--canvas);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--canvas-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--canvas-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--ink);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.num {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* inputs: strip native spinners for a cleaner instrument look */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* range slider */
+input[type="range"].slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="range"].slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--fill, 0%),
+    var(--panel-3) var(--fill, 0%),
+    var(--panel-3) 100%
+  );
+}
+input[type="range"].slider::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--panel-3);
+}
+input[type="range"].slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+input[type="range"].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 120ms ease;
+}
+input[type="range"].slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 2px solid var(--accent);
+}
+input[type="range"].slider:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+input[type="range"].slider:focus-visible {
+  outline: none;
+}
+input[type="range"].slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px var(--focus);
+}
+
+/* thin scrollbars */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+/* animated mud flow used on the hero schematic */
+@keyframes flow-down {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+@keyframes flow-up {
+  to {
+    stroke-dashoffset: 24;
+  }
+}
+.flow-down {
+  animation: flow-down 1.1s linear infinite;
+}
+.flow-up {
+  animation: flow-up 1.6s linear infinite;
+}
+@keyframes bit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 1.6s ease-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-down,
+  .flow-up,
+  .pulse-ring {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Print: always light ink on white, app chrome hidden                 */
+/* ------------------------------------------------------------------ */
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    color-scheme: light;
+    --canvas: #ffffff;
+    --panel: #ffffff;
+    --panel-2: #f5f5f3;
+    --panel-3: #e9e8e4;
+    --line: #dcdbd6;
+    --line-strong: #bdbbb4;
+    --ink: #0b0b0b;
+    --ink-2: #3f3e3b;
+    --ink-3: #6b6a65;
+    --accent: #c2410c;
+    --accent-soft: rgba(194, 65, 12, 0.08);
+    --accent-line: rgba(194, 65, 12, 0.35);
+    --series-1: #2a78d6;
+    --series-3: #1baf7a;
+    --series-7: #6250d6;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    background-image: none !important;
+  }
+  aside,
+  footer {
+    display: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page {
+    margin: 12mm;
+  }
 }
